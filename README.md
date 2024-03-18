@@ -6,7 +6,7 @@
 
 
 # Алгоритм установки и запуска проекта:
-В файлы `.yaml` директории config, а также в файлы `docker-compose.yml`, `wait_for_postgres.sh`  необходимо внести имя пользователя и пароль для пользовател я базы данных.
+В файлы `.yaml` директории config, а также в файлы `docker-compose.yml`, `wait_for_postgres.sh`  необходимо внести имя пользователя и пароль для пользователя базы данных.
 
 Запуск:
 - Через Docker `docker-compose up --build filmoteka-server`
