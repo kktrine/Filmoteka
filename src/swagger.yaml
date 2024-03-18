@@ -1,0 +1,470 @@
+swagger: "2.0"
+info:
+  title: Filmoteka
+  version: 0.0.1
+host: "localhost:8080"
+basePath: /Filmoteka/
+schemes:
+  - http
+securityDefinitions:
+  isUser:
+    type: apiKey
+    in: header
+    name: user-key
+  isAdmin:
+    type: apiKey
+    in: header
+    name: admin-key
+security:
+  - isAdmin: []
+paths:
+  /actors:
+    delete:
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - format: date
+          in: query
+          name: b_date
+          required: true
+          type: string
+      responses:
+        "204":
+          description: Успешное удаление
+        "400":
+          description: Некорректные входные данные
+          schema:
+            type: string
+      tags:
+        - Actor
+      operationId: deleteActor
+      summary: Удалить запись об актере
+    get:
+      security:
+        - isUser: []
+        - isAdmin: []
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Список актеров
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                date_of_birthday:
+                  type: string
+                  format: date
+                gender:
+                  enum:
+                    - M
+                    - F
+                films:
+                  type: array
+                  items:
+                    type: string
+        "400":
+          description: Ошибка
+          schema:
+            type: string
+      tags:
+        - Actor
+      operationId: getAllActors
+      summary: Получить список всех актеров
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/Actor"
+      responses:
+        "200":
+          description: Успешно
+        "400":
+          description: Ошибка
+          schema:
+            type: string
+      tags:
+        - Actor
+      operationId: addActor
+      summary: Добавить актера
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - format: date
+          in: query
+          name: b_date
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              date_of_birthday:
+                format: date
+                type: string
+              name:
+                type: string
+              sex:
+                enum:
+                  - M
+                  - F
+                type: string
+            type: object
+      responses:
+        "200":
+          description: Обновлено удачно
+        "400":
+          description: Ошибка
+          schema:
+            type: string
+      tags:
+        - Actor
+      operationId: updateActor
+      summary: Изменить информацию об актере
+
+  /films:
+    delete:
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: year
+          required: true
+          type: integer
+      responses:
+        "204":
+          description: Успешное удаление
+        "400":
+          description: Некорректные входные данные
+          schema:
+            type: string
+      tags:
+        - Film
+      operationId: deleteFilm
+      summary: Удалить запись о фильме
+    get:
+      security:
+        - isUser: []
+        - isAdmin: []
+      produces:
+        - application/json
+      parameters:
+        - enum:
+            - title
+            - rating
+            - datepremiere
+          in: query
+          name: sortBy
+          required: false
+          type: string
+          default: rating
+      responses:
+        "200":
+          description: Список фильмов
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                year:
+                  type: integer
+                description:
+                  type: string
+                  maxLength: 1000
+                rating:
+                  type: number
+                  minimum: 0
+                  maximum: 10
+              required:
+                - name
+                - year
+                - description
+                - rating
+        "400":
+          description: Ошибка
+          schema:
+            type: string
+      tags:
+        - Film
+      operationId: getAllFilmsSorted
+      summary: Получить список всех фильмов с возможностью сортировки
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/Film"
+      responses:
+        "200":
+          description: Успешно
+        "400":
+          description: Ошибка
+          schema:
+            type: string
+      tags:
+        - Film
+      operationId: addFilm
+      summary: Добавить фильм
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: name
+          required: true
+          type: string
+        - in: query
+          name: year
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              description:
+                maxLength: 1000
+                type: string
+              name:
+                maxLength: 150
+                type: string
+              rate:
+                maximum: 10
+                minimum: 0
+                type: number
+              year:
+                type: integer
+            type: object
+      responses:
+        "200":
+          description: Обновлено удачно
+        "400":
+          description: Ошибка
+          schema:
+            type: string
+      tags:
+        - Film
+      operationId: updateFilm
+      summary: Изменить информацию о фильме
+  /films/find:
+    get:
+      security:
+        - isUser: []
+        - isAdmin: []
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          maxLength: 1000
+          name: desc
+          required: true
+          type: string
+        - in: query
+          name: actor
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Найдено
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                year:
+                  type: integer
+                description:
+                  type: string
+                  maxLength: 1000
+              required:
+                - name
+                - year
+                - description
+        "400":
+          description: Не найдено
+          schema:
+            type: string
+      tags:
+        - Film
+      operationId: findFilm
+      summary: Поиск фильма по фрагменту описания или имени актера
+  /user/login:
+    get:
+      security: []
+      parameters:
+        - in: query
+          minLength: 5
+          name: username
+          required: true
+          type: string
+        - in: query
+          minLength: 5
+          name: password
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Успешнный вход в систему
+          schema:
+            type: string
+        "400":
+          description: Неверное имя пользователя / пароль
+      tags:
+        - User
+      operationId: userLogin
+      summary: Вход пользователя в систему
+  /user/logout:
+    get:
+      security:
+        - isUser: []
+        - isAdmin: []
+      parameters:
+        - in: header
+          name: token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Успешно
+      tags:
+        - User
+      operationId: userLogout
+      summary: Выход пользователя из системы
+definitions:
+  Actor:
+    properties:
+      name:
+        type: string
+      date_of_birthday:
+        format: date
+        type: string
+      sex:
+        enum:
+          - M
+          - F
+        type: string
+    required:
+      - name
+      - sex
+      - date_of_birthday
+    type: object
+  Actors:
+    items:
+      $ref: "#/definitions/Actor"
+    type: array
+  Film:
+    properties:
+      name:
+        maxLength: 150
+        type: string
+      rate:
+        maximum: 10
+        minimum: 0
+        type: number
+      year:
+        type: integer
+      description:
+        maxLength: 1000
+        type: string
+      actors:
+        $ref: "#/definitions/Actors"
+    required:
+      - name
+      - description
+      - year
+      - rate
+      - actors
+    type: object
+  Films:
+    items:
+      $ref: "#/definitions/Film"
+    type: array
+  User:
+    properties:
+      username:
+        type: string
+      userStatus:
+        enum:
+          - admin
+          - user
+        type: string
+      password:
+        minLength: 5
+        type: string
+    type: object
+  ActorFilm:
+    properties:
+      name:
+        type: string
+      date_of_birthday:
+        format: date
+        type: string
+      sex:
+        enum:
+          - M
+          - F
+        type: string
+      films:
+        type: array
+        items:
+          type: string
+    required:
+      - name
+      - sex
+      - date_of_birthday
+      - films
+    type: object
+  principal:
+    type: object
+    properties:
+      name:
+        type: string
+      roles:
+        type: array
+        items:
+          type: string
+tags:
+  - description: Everything about actors
+    name: Actor
+  - description: Everything about films
+    name: Film
+  - description: Login / logout
+    name: User
+x-components: {}

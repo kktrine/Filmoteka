@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  filmoteka-server:
+    build: ./
+    command: ./wait_for_postgres.sh db ./filmoteka-api --config=./config/config_dev.yaml
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=45hekmrf
+      - DB_USER=alex
+      - DB_TABLE=filmoteka
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+    - dbdata:/var/lib/postgresql/16/main
+    environment:
+      - POSTGRES_USER=alex
+      - POSTGRES_PASSWORD=45hekmrf
+      - POSTGRES_DB=filmoteka
+    ports:
+      - 5436:5432
+
+volumes:
+  dbdata:
