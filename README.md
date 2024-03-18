@@ -11,8 +11,7 @@
 
 Локально `make run_service`
 
-
-
+Запуск тестов: из директории `nternal/repository/postgre`: `go test`
 
 
 
