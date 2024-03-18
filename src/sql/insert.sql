@@ -1,4 +1,4 @@
-insert into film (1, title, description, date_premiere, rating)
+insert into film (id, title, description, date_premiere, rating)
                   values (1, 'Barbie', 'Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans.', 2023, 6.6),
                          (2, 'Twilight', 'When Bella Swan moves to a small town in the Pacific Northwest, she falls in love with Edward Cullen, a mysterious classmate who reveals himself to be a 108-year-old vampire.', 2008, 5.3),
                          (3, 'La La Land', 'While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.', 2016, 8.0);
