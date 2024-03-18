@@ -6,12 +6,13 @@
 
 
 # Алгоритм установки и запуска проекта:
-Через Docker `docker-compose up --build filmoteka-server`
+В файлы .yaml директории config необходимо внести имя пользователя и пароль для пользовател я базы данных.
 
+Запуск:
+- Через Docker `docker-compose up --build filmoteka-server`
+- Локально `make run_service`
 
-Локально `make run_service`
-
-Запуск тестов: из директории `nternal/repository/postgre`: `go test`
+Запуск тестов: из директории `iternal/repository/postgre`: `go test`
 
 
 
